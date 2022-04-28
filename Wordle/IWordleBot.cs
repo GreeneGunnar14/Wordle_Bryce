@@ -13,7 +13,6 @@ namespace Wordle
         {
             return true;
         }
-
     }
 }
 

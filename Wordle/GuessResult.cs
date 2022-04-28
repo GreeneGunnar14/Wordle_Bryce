@@ -8,14 +8,9 @@ namespace Wordle
 	{
         public List<LetterGuess> Guess { get; set; }
 
-        public GuessResult(string guess)
+        public GuessResult(List<LetterGuess> guess)
 		{
-			Guess = new List<LetterGuess>(guess.Length);
-
-			foreach(var letter in guess)
-            {
-				Guess.Add(new LetterGuess(letter));
-            }
+            Guess = guess;
 		}
 
         public override string ToString()
