@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Wordle
 {
@@ -6,11 +7,11 @@ namespace Wordle
     {
         static void Main(string[] args)
         {
-            var bot = new BryceBot();
-
-            var game = new WordleGame();
+            WordleGame game = new WordleGame("where");
 
             game.MaxGuesses = 6;
+
+            BryceBot bot = new BryceBot();
 
             Console.WriteLine(game.Play(bot));
         }

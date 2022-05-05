@@ -17,6 +17,7 @@ namespace Wordle
         public LetterGuess(char letter)
 		{
 			Letter = letter;
+			LetterResult = LetterResult.Incorrect;
 		}
 	}
 }

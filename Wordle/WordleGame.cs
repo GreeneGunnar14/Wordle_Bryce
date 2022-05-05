@@ -2,89 +2,84 @@
 using System.Collections.Generic;
 namespace Wordle
 {
-	public class WordleGame
-	{
+    public class WordleGame
+    {
         public string SecretWord { get; set; }
-        public int MaxGuesses { get; set; }
+        public int MaxGuesses { get; set; } = 100;
 
-		public WordleGame(string secretWord = "arise")
-		{
-			SecretWord = secretWord;
-		}
-
-		public int Play(IWordleBot bot)
+        public WordleGame(string secretWord = "arise")
         {
-			int guessNumber;
-			for(guessNumber = 0; guessNumber < MaxGuesses; guessNumber++)
+            SecretWord = secretWord;
+        }
+
+        public int Play(IWordleBot bot)
+        {
+            int guessNumber;
+            for (guessNumber = 0; guessNumber < MaxGuesses; guessNumber++)
             {
-				string guess = bot.GenerateGuess();
+                string guess = bot.GenerateGuess();
                 Console.WriteLine($"guess {guessNumber + 1}: {guess}");
 
-				GuessResult guessResult = CheckGuess(guess);
-				bot.Guesses.Add(guessResult);
+                GuessResult guessResult = CheckGuess(guess);
+                bot.Guesses.Add(guessResult);
                 Console.WriteLine(guessResult);
 
-				if(IsCorrect(guessResult))
+                if (IsCorrect(guessResult))
                 {
-					return guessNumber;
+                    return guessNumber + 1;
                 }
             }
 
-			return guessNumber;
+            return guessNumber;
         }
 
-		public GuessResult CheckGuess( string guess )
+        public GuessResult CheckGuess(string guess)
         {
-			var letterGuesses = new List<LetterGuess>();
+            var guessResult = new GuessResult(guess);
 
-			var foundArray = new int[guess.Length];
+            var foundArray = new int[guess.Length];
 
-			for (int i = 0; i < guess.Length; i++)
+            for (int i = 0; i < guess.Length; i++)
             {
-				var result = new LetterGuess(guess[i]);
-
-				if (guess[i] == SecretWord[i] && foundArray[i] != 1)
+                if (guess[i] == SecretWord[i] && foundArray[i] != 1)
                 {
-					result.LetterResult = LetterResult.Correct;
+                    guessResult.Guess[i].LetterResult = LetterResult.Correct;
 
-					foundArray[i] = 1;
+                    foundArray[i] = 1;
                 }
-				else
-                {
-					for (int j = 0; j < guess.Length; j++)
-                    {
-						if (guess[i] == guess[j] && foundArray[j] != 1)
-                        {
-							result.LetterResult = LetterResult.Misplaced;
+            }
 
-							foundArray[j] = 1;
-                        }
-						else
+            for (int i = 0; i < guess.Length; i++)
+            {
+                if (foundArray[i] != 1)
+                {
+                    for (int j = 0; j < guess.Length; j++)
+                    {
+                        if (guess[i] == SecretWord[j] && foundArray[j] != 1)
                         {
-							result.LetterResult = LetterResult.Incorrect;
+                            guessResult.Guess[i].LetterResult = LetterResult.Misplaced;
+
+                            foundArray[j] = 1;
+
+                            break;
                         }
                     }
                 }
-
-				letterGuesses.Add(result);
             }
 
-			var guessResult = new GuessResult(letterGuesses);
-
-			return guessResult;
+            return guessResult;
         }
 
-		private bool IsCorrect(GuessResult guessResult)
+        private bool IsCorrect(GuessResult guessResult)
         {
-			foreach(var letterGuess in guessResult.Guess)
-			{
-				if (letterGuess.LetterResult != LetterResult.Correct)
-					return false;
+            foreach (var letterGuess in guessResult.Guess)
+            {
+                if (letterGuess.LetterResult != LetterResult.Correct)
+                    return false;
+            }
 
-			}
-
-			return true;
+            return true;
         }
-	}
+    }
 }
 
