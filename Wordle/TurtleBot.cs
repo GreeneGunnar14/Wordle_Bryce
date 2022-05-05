@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Wordle
 {
-    public class BryceBot : IWordleBot
+    public class TurtleBot : IWordleBot
     {
-        public BryceBot()
+        public TurtleBot()
         {
             Guesses = new List<GuessResult>();
 
@@ -15,16 +15,16 @@ namespace Wordle
 
             WordFrequencies = new Dictionary<string, int>();
 
-            PositionalFrequencies = new Dictionary<int, MaxHeap<char>>();
+            //PositionalFrequencies = new Dictionary<int, MaxHeap<char>>();
 
-            for (int i = 0; i < WordLength; i++)
-            {
-                PositionalFrequencies[i] = new MaxHeap<char>();
-            }
+            //for (int i = 0; i < WordLength; i++)
+            //{
+            //    PositionalFrequencies[i] = new MaxHeap<char>();
+            //}
 
             int count = 0;
             int line = 0;
-            while (count < 10000)
+            while (count < 4000)
             {
                 string[] splitLine = unFilteredData[line].Split(',');
 
@@ -51,8 +51,6 @@ namespace Wordle
         public List<string> GuessStrings { get; set; }
 
         public Dictionary<string, int> WordFrequencies { get; set; }
-
-        public Dictionary<int, MaxHeap<char>> PositionalFrequencies { get; set; }
 
         public Dictionary<char, int> LetterCount { get; set; }
 
